@@ -1,0 +1,19 @@
+/** Will be used by the tailwindcss plugin to create the output CSS file. This File is not needed for the production build. Included in this repo just for reference. **/
+@import "tailwindcss";
+
+@font-face{
+    font-family: "Rubik";
+    src: url("../font/Rubik/Rubik-VariableFont_wght.ttf") format("truetype");
+}
+
+@theme{
+    --color-blue-600: hsl(231, 69%, 60%);
+    --color-red-400: hsl(0, 94%, 66%);
+    --color-grey-50: hsl(252deg 2.37% 58.63%);
+    --color-blue-950: hsl(229, 31%, 21%);
+    --font-rubik: "Rubik", sans-serif;
+}
+
+html, body{
+    font-family: var(--font-rubik);
+}
