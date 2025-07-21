@@ -1,101 +1,119 @@
-const NavBar = (function(){
-    const navBar = document.querySelector("#navBar");
-    const navBarLogo = navBar.querySelector("#nav-logo");
-    const menuToggleButton = navBar.querySelector("#toggle-menu");
-    const openMenuButton = menuToggleButton.querySelector(".open-menu");
-    const closeMenuButton = menuToggleButton.querySelector(".close-menu");
-    const menu = document.querySelector("#menu");
+const DOM = {
+    navBar: document.querySelector("#navBar"),
+    navBarLogo: document.querySelector("#nav-logo"),
+    menuToggleButton: document.querySelector("#toggle-menu"),
+    openMenuButton: document.querySelector(".open-menu"),
+    closeMenuButton: document.querySelector(".close-menu"),
+    menu: document.querySelector("#menu"),
+    navSocialIcons: document.querySelector("#nav-social-icons"),
+    
+    tabButtons: document.querySelectorAll(".tab-btn"),
+    tabPanels: document.querySelectorAll(".tab-pannel"),
+    tabPannelsButtons : document.querySelectorAll(".tab-pannel a"),
+    
+    form: document.querySelector("#form"),
+    email: document.querySelector("#form #email"),
+    emailInput: document.querySelector("#form #email-input"),
+    errorMessage: document.querySelector("#error-message"),
+    errorIcon: document.querySelector("#error-icon"),
+};
 
-    menuToggleButton.addEventListener("click", toggle);
+const NavBar = (function(){
+    DOM.menuToggleButton.addEventListener("click", toggle);
 
     function toggle(){
         // Svg
-        navBarLogo.classList.toggle("fill-blue-950");
-        navBarLogo.classList.toggle("stroke-blue-950");
-        navBarLogo.classList.toggle("text-white");
-
-        navBarLogo.classList.toggle("fill-white");
-        navBarLogo.classList.toggle("stroke-white");
-        navBarLogo.classList.toggle("text-blue-600");
+        DOM.navBarLogo.classList.toggle("fill-blue-950");
+        DOM.navBarLogo.classList.toggle("stroke-blue-950");
+        DOM.navBarLogo.classList.toggle("text-white");
+        DOM.navBarLogo.classList.toggle("fill-white");
+        DOM.navBarLogo.classList.toggle("stroke-white");
+        DOM.navBarLogo.classList.toggle("text-blue-600");
 
         // Toggle Button
-        openMenuButton.classList.toggle("hidden");
-        closeMenuButton.classList.toggle("hidden");
+        DOM.openMenuButton.classList.toggle("hidden");
+        DOM.closeMenuButton.classList.toggle("hidden");
 
         // Menu
-        const isHidden = menu.getAttribute("aria-hidden") === "true";
-        menu.classList.toggle("opacity-0");
-        menu.classList.toggle("pointer-events-none");
-        menu.setAttribute("aria-hidden", String(!isHidden));
+        const isHidden = DOM.menu.getAttribute("aria-hidden") === "true";
+        DOM.menu.classList.toggle("opacity-0");
+        DOM.menu.classList.toggle("pointer-events-none");
+        DOM.menu.setAttribute("aria-hidden", String(!isHidden));
+
+        document.body.classList.toggle("overflow-hidden");
     }
-
-})()
-
+})();
 
 const TabbedContent = (function(){
-    const tabButtons = document.querySelectorAll(".tab-btn");
-    const tabPannels = document.querySelectorAll(".tab-pannel");
-    let currentTab = 0
+    let currentTab = 0;
 
-    tabButtons.forEach((button, index)=>{
-        button.addEventListener("click", ()=>{
-            // Remove the Active State 
-            tabButtons[currentTab].classList.remove("after:bg-red-400");
-            tabButtons[currentTab].setAttribute("aria-selected", "false");
-            tabPannels[currentTab].classList.add("opacity-0");
-            tabPannels[currentTab].classList.add("pointer-events-none");
-            tabPannels[currentTab].setAttribute("aria-hidden", "true");
+    DOM.tabButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+            // Remove previous active state
+            DOM.tabButtons[currentTab].classList.remove("after:bg-red-400");
+            DOM.tabButtons[currentTab].setAttribute("aria-selected", "false");
+            DOM.tabPanels[currentTab].classList.add("opacity-0", "pointer-events-none");
+            DOM.tabPanels[currentTab].setAttribute("aria-hidden", "true");
 
-            // Change the Active Tab
             currentTab = index;
 
-            // Add the Active State
-            tabButtons[currentTab].classList.add("after:bg-red-400");
-            tabButtons[currentTab].setAttribute("aria-selected", "true");
-            tabPannels[currentTab].classList.remove("opacity-0");
-            tabPannels[currentTab].classList.remove("pointer-events-none");
-            tabPannels[currentTab].setAttribute("aria-hidden", "false");    
-
-        })
-    })
-
-})()
+            // Add active state
+            DOM.tabButtons[currentTab].classList.add("after:bg-red-400");
+            DOM.tabButtons[currentTab].setAttribute("aria-selected", "true");
+            DOM.tabPanels[currentTab].classList.remove("opacity-0", "pointer-events-none");
+            DOM.tabPanels[currentTab].setAttribute("aria-hidden", "false");
+        });
+    });
+})();
 
 const Form = (function(){
-    debugger;
-    const form = document.querySelector("#form");
-    const email = form.querySelector('#email');
-    const errorMessage = form.querySelector("#error-message");
-    const errorIcon = form.querySelector("#error-icon");
-    const emailInput = form.querySelector("#email-input");
-
-    form.addEventListener("submit" , (e)=>{
+    DOM.form.addEventListener("submit", (e) => {
         e.preventDefault();
-        if(!email.checkValidity()){
-            emailInput.classList.add("bg-red-400");
-            email.ariaInvalid = true;
-            email.setAttribute("aria-describedby", "error-Message");
-            errorIcon.classList.remove("opacity-0");
-            errorMessage.classList.remove("opacity-0");
-            errorMessage.classList.remove("pointer-events-none");
-            errorMessage.setAttribute("aria-hidden", "false");
-            traceValidEmail()
+        if (!DOM.email.checkValidity()) {
+            DOM.emailInput.classList.add("bg-red-400");
+            DOM.email.setAttribute("aria-invalid", "true");
+            DOM.email.setAttribute("aria-describedby", "error-message");
+            DOM.errorIcon.classList.remove("opacity-0");
+            DOM.errorMessage.classList.remove("opacity-0", "pointer-events-none");
+            DOM.errorMessage.setAttribute("aria-hidden", "false");
+
+            traceValidEmail();
         }
-    })
+    });
 
-    traceValidEmail = ()=>{
-        email.addEventListener("input", ()=>{
-            if(email.checkValidity()){
-                emailInput.classList.remove("bg-red-400");
-                email.ariaInvalid = false;
-                email.removeAttribute("aria-describedby");
-                errorIcon.classList.add("opacity-0");
-                errorMessage.classList.add("opacity-0");
-                errorMessage.classList.add("pointer-events-none");
-                errorMessage.setAttribute("aria-hidden", "true");
+    const traceValidEmail = () => {
+        DOM.email.addEventListener("input", () => {
+            if (DOM.email.checkValidity()) {
+                DOM.emailInput.classList.remove("bg-red-400");
+                DOM.email.removeAttribute("aria-invalid");
+                DOM.email.removeAttribute("aria-describedby");
+                DOM.errorIcon.classList.add("opacity-0");
+                DOM.errorMessage.classList.add("opacity-0", "pointer-events-none");
+                DOM.errorMessage.setAttribute("aria-hidden", "true");
             }
-        })
-    }
-    
+        });
+    };
+})();
 
-})()
+const ResponsiveAccessibility = (function(){
+    const mediumScreen = window.matchMedia("(min-width: 768px)");
+
+    function handleMediumScreenChange(e){
+        if (e.matches) {
+            DOM.menuToggleButton.setAttribute("aria-hidden", "true");
+            DOM.menu.setAttribute("aria-hidden", "false");
+            DOM.tabPannelsButtons.forEach(button => {
+                button.setAttribute("aria-hidden", "false");
+            });
+        }else{
+            DOM.menuToggleButton.setAttribute("aria-hidden", "false");
+            DOM.menu.setAttribute("aria-hidden", "true");
+            DOM.tabPannelsButtons.forEach(button => {
+                button.setAttribute("aria-hidden", "true");
+            });
+        }
+    }
+
+    handleMediumScreenChange(mediumScreen);
+    mediumScreen.addEventListener("change", handleMediumScreenChange);
+})();
