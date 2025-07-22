@@ -3,7 +3,7 @@
 *.fig
 *.xd
 /design
-*.md
+style-guide.md
 preview.jpg
 
 # Dependencies
